@@ -43,7 +43,11 @@
 {
     NSMutableArray * data = [[NSMutableArray alloc] init];
     for (int i = 0; i < 12; i ++) {
-        [data addObject:@""];
+        NSMutableDictionary * info = [@{} mutableCopy];
+        [info setObject:[NSString stringWithFormat:@"时间：%d",i] forKey:@"date"];
+        [info setObject:@"活动" forKey:@"title"];
+        [info setObject:@(random()%20) forKey:@"count"];
+        [data addObject:info];
     }
     return data;
 }

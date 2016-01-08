@@ -7,16 +7,35 @@
 //
 
 #import "AHDActivityModel.h"
+#import "MJExtension.h"
 
 @implementation AHDActivityModel
+
+
++ (NSDictionary *)mj_replacedKeyFromPropertyName
+{
+    return @{@"peopleNumber":@"count"};
+}
+
+// itemList 数组中 为 TemplateCategoryItemModel
++ (NSDictionary *)mj_objectClassInArray
+{
+    return @{
+             @"itemList" : @"TemplateCategoryItemModel"
+             };
+}
 
 - (instancetype)init
 {
     self = [super init];
     if (self) {
-        self.content = @"活动";
     }
     return self;
+}
+
+-(void)loadModelInfo:(NSDictionary *)modelInfo
+{
+    
 }
 
 -(NSString *)cellIdentifier

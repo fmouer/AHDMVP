@@ -25,13 +25,23 @@
 {
     _titleLabel = [[UILabel alloc] initWithFrame:(CGRect){20,20,100,20}];
     [self addSubview:_titleLabel];
-    _titleLabel.text = @"showCell";
+    
+    _dateLabel = [[UILabel alloc] initWithFrame:(CGRect){20,50,150,20}];
+    [self addSubview:_dateLabel];
+
+    _peopleLabel = [[UILabel alloc] initWithFrame:(CGRect){20,80,150,20}];
+    [self addSubview:_peopleLabel];
+
 }
 
 -(void)setCellModel:(id<AHDModelProtocol>)model
 {
     AHDActivityModel * actModel = (AHDActivityModel *)model;
-    _titleLabel.text = actModel.content;
+    _titleLabel.text = actModel.title;
+    
+    _dateLabel.text = actModel.date;
+
+    _peopleLabel.text = actModel.peopleNumber;
 }
 
 

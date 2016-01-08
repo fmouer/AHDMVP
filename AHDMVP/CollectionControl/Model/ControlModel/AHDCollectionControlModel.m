@@ -10,6 +10,7 @@
 #import <UIKit/UIKit.h>
 #import "AHDBaseControlModel.h"
 #import "NSObject+UniqueCode.h"
+#import "MJExtension.h"
 
 @interface AHDCollectionControlModel ()
 
@@ -112,10 +113,11 @@
                                 
                 [insertIndexPaths addObject:[NSIndexPath indexPathForItem:_modelArrays.count inSection:0]];
                 
-                AHDBaseControlModel * baseModel = [[aclass alloc] init];
-                if ([baseModel respondsToSelector:@selector(loadModelInfo:)]) {
-                    [baseModel loadModelInfo:dict];
-                }
+                AHDBaseControlModel * baseModel = [aclass mj_objectWithKeyValues:dict];
+                                
+//                if ([baseModel respondsToSelector:@selector(loadModelInfo:)]) {
+//                    [baseModel loadModelInfo:dict];
+//                }
                 baseModel.controlModel = self;
                 [_modelArrays addObject:baseModel];
             }

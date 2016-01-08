@@ -11,6 +11,10 @@
 
 @interface AHDActivityCell : UICollectionViewCell<AHDCellProtocol>
 
-@property (nonatomic ,strong)UILabel    * titleLabel;
+@property (nonatomic, strong)UILabel    * titleLabel;
+
+@property (nonatomic, strong)UILabel    * dateLabel;
+
+@property (nonatomic, strong)UILabel    * peopleLabel;
 
 @end

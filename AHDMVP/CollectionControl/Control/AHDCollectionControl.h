@@ -34,6 +34,8 @@ typedef enum {
 
 @property (nonatomic, assign)AHDRefreshType  refreshType;
 
+@property (nonatomic, assign)BOOL beginRefreshing;
+
 /**
  *  设置 itemCellSize，确定的Size
  */

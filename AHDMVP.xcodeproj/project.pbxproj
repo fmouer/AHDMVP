@@ -53,6 +53,7 @@
 		759312161C3F863700B1F514 /* NSObject+MJKeyValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 759312091C3F863700B1F514 /* NSObject+MJKeyValue.m */; };
 		759312171C3F863700B1F514 /* NSObject+MJProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 7593120B1C3F863700B1F514 /* NSObject+MJProperty.m */; };
 		759312181C3F863700B1F514 /* NSString+MJExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 7593120D1C3F863700B1F514 /* NSString+MJExtension.m */; };
+		7593121C1C3F970000B1F514 /* VerticalLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7593121B1C3F970000B1F514 /* VerticalLabel.m */; };
 		75A186C41C3BAAA0009B1F7B /* AHDActivityCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 75A186C31C3BAAA0009B1F7B /* AHDActivityCell.m */; };
 		75A186C71C3BAAC5009B1F7B /* AHDActivityModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 75A186C61C3BAAC5009B1F7B /* AHDActivityModel.m */; };
 		75A186CB1C3BAAF4009B1F7B /* AHDActivityHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 75A186CA1C3BAAF4009B1F7B /* AHDActivityHelper.m */; };
@@ -173,6 +174,8 @@
 		7593120B1C3F863700B1F514 /* NSObject+MJProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+MJProperty.m"; sourceTree = "<group>"; };
 		7593120C1C3F863700B1F514 /* NSString+MJExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MJExtension.h"; sourceTree = "<group>"; };
 		7593120D1C3F863700B1F514 /* NSString+MJExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MJExtension.m"; sourceTree = "<group>"; };
+		7593121A1C3F970000B1F514 /* VerticalLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VerticalLabel.h; sourceTree = "<group>"; };
+		7593121B1C3F970000B1F514 /* VerticalLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VerticalLabel.m; sourceTree = "<group>"; };
 		75A186C21C3BAAA0009B1F7B /* AHDActivityCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AHDActivityCell.h; sourceTree = "<group>"; };
 		75A186C31C3BAAA0009B1F7B /* AHDActivityCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHDActivityCell.m; sourceTree = "<group>"; };
 		75A186C51C3BAAC5009B1F7B /* AHDActivityModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AHDActivityModel.h; sourceTree = "<group>"; };
@@ -504,6 +507,15 @@
 			path = MJExtension;
 			sourceTree = "<group>";
 		};
+		759312191C3F968700B1F514 /* verticalLabel */ = {
+			isa = PBXGroup;
+			children = (
+				7593121A1C3F970000B1F514 /* VerticalLabel.h */,
+				7593121B1C3F970000B1F514 /* VerticalLabel.m */,
+			);
+			name = verticalLabel;
+			sourceTree = "<group>";
+		};
 		75A186B91C3BA6F6009B1F7B /* 活动 */ = {
 			isa = PBXGroup;
 			children = (
@@ -591,6 +603,7 @@
 		75A186CD1C3BB8C1009B1F7B /* cell */ = {
 			isa = PBXGroup;
 			children = (
+				759312191C3F968700B1F514 /* verticalLabel */,
 				75A186D01C3BB942009B1F7B /* AHDMiniActivityCell.h */,
 				75A186D11C3BB942009B1F7B /* AHDMiniActivityCell.m */,
 			);
@@ -781,6 +794,7 @@
 				759311E81C3F635800B1F514 /* MJRefreshAutoGifFooter.m in Sources */,
 				75A187001C3BDF3B009B1F7B /* AHDShowHeaderView.m in Sources */,
 				75A186E61C3BBF5B009B1F7B /* AHDMiniActivityViewController.m in Sources */,
+				7593121C1C3F970000B1F514 /* VerticalLabel.m in Sources */,
 				75A186EF1C3BC56B009B1F7B /* AHDShowModel.m in Sources */,
 				759311F01C3F635800B1F514 /* MJRefreshStateHeader.m in Sources */,
 				75B3B5851C3E13F400CF9B6C /* AHDTagAction.m in Sources */,

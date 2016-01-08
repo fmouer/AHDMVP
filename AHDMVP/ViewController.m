@@ -7,11 +7,15 @@
 //
 
 #import "ViewController.h"
+#import "VerticalLabel.h"
 
 @interface ViewController ()
 {
     NSArray         *   _cellArrays;
+    
+    VerticalLabel   * _verticalLabel;
 }
+
 @end
 
 @implementation ViewController
@@ -27,6 +31,10 @@
                    @{@"title":@"标签",@"class":@"AHDTagViewController"}];
     
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
+    
+    _verticalLabel = [[VerticalLabel alloc] initWithFrame:(CGRect){0,100,375,500}];
+    [self.view addSubview:_verticalLabel];
+
 }
 
 

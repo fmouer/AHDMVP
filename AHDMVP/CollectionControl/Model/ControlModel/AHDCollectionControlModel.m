@@ -115,9 +115,9 @@
                 
                 AHDBaseControlModel * baseModel = [aclass mj_objectWithKeyValues:dict];
                                 
-//                if ([baseModel respondsToSelector:@selector(loadModelInfo:)]) {
-//                    [baseModel loadModelInfo:dict];
-//                }
+                if ([baseModel respondsToSelector:@selector(loadModelInfo:)]) {
+                    [baseModel loadModelInfo:dict];
+                }
                 baseModel.controlModel = self;
                 [_modelArrays addObject:baseModel];
             }

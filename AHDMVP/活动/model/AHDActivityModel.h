@@ -10,6 +10,10 @@
 
 @interface AHDActivityModel : AHDBaseControlModel
 
-@property (nonatomic, strong)NSString * content;
+@property (nonatomic, strong)NSString * title;
+
+@property (nonatomic, strong)NSString * date;
+
+@property (nonatomic, strong)NSString * peopleNumber;
 
 @end

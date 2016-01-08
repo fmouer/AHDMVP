@@ -18,8 +18,7 @@
 #import "AHDShowModel.h"
 #import <objc/runtime.h>
 
-#import "UIScrollView+SVPullToRefresh.h"
-#import "UIScrollView+SVInfiniteScrolling.h"
+#import "MJRefresh.h"
 
 #define EstimatedItemSizeHeight     (60.0f)
 
@@ -170,21 +169,21 @@
         }
         
         if (_flowLayout.scrollDirection == UICollectionViewScrollDirectionVertical) {
-            __weak AHDCollectionControl    * wSelf = self;
             //下拉刷新
             if (_refreshType == AHDRefreshTypeRefresh ||
                 _refreshType == AHDRefreshTypeRefreshAndLoading) {
-                [_collectionView addPullToRefreshWithActionHandler:^{
-                    [wSelf refresh];
-                }];
+                _collectionView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(refresh)];
             }
-            
+            if (_beginRefreshing) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [_collectionView.mj_header beginRefreshing];
+                });
+            }
             //上拉加载更多
             if (_refreshType == AHDRefreshTypeLoading ||
                 _refreshType == AHDRefreshTypeRefreshAndLoading) {
-                [_collectionView addInfiniteScrollingWithActionHandler:^{
-                    [wSelf loading];
-                }];
+                _collectionView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(loading)];
+                _collectionView.mj_footer.automaticallyHidden = YES;
             }
         }
         
@@ -411,13 +410,13 @@
 {
     __weak typeof(UICollectionView *)wCollectionView = _collectionView;
     __weak typeof(AHDCollectionControl *)wSelf = self;
-    [_collectionView.infiniteScrollingView stopAnimating];
-    [_collectionView.pullToRefreshView stopAnimating];
-    if (page == 2) {
-        _collectionView.infiniteScrollingView.enabled = NO;
+    
+    if ([_collectionView.mj_header isRefreshing]) {
+        [_collectionView.mj_header endRefreshing];
     }else{
-        _collectionView.infiniteScrollingView.enabled = YES;
+        [_collectionView.mj_footer endRefreshing];
     }
+    
     [self.controlModel tableViewControlLoadDatas:objectInfo pages:page insertCompletion:^(NSArray<NSIndexPath *> *insertIndexPaths) {
         //插入新数据
         [wCollectionView insertItemsAtIndexPaths:insertIndexPaths];

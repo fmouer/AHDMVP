@@ -21,7 +21,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
     CGRect rect = self.view.bounds;
     rect.origin.y = 64;
     rect.size.height -= 64;
@@ -32,18 +31,23 @@
     _collectionControl.collectionEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
     [self.view addSubview:_collectionControl];
     
+    _collectionControl.beginRefreshing = YES;
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    [_collectionControl setControlData:[self getData] page:0];
+    self.view.backgroundColor = [UIColor redColor];
 }
 
 - (NSArray * )getData
 {
     NSMutableArray * data = [[NSMutableArray alloc] init];
-    for (int i = 0; i < 10; i ++) {
-        [data addObject:@""];
+    for (int i = 0; i < 12; i ++) {
+        NSMutableDictionary * info = [@{} mutableCopy];
+        [info setObject:[NSString stringWithFormat:@"时间：%d",i] forKey:@"date"];
+        [info setObject:@"活动" forKey:@"title"];
+        [info setObject:@(random()%20) forKey:@"count"];
+        [data addObject:info];
     }
     return data;
 }

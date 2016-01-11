@@ -11,13 +11,28 @@
 static inline double radians (double degrees) {return degrees * M_PI/180;}
 
 @implementation VerticalLabel
+
++(VerticalLabel *)verticalLabel:(UIFont *)font color:(UIColor *)color
+{
+    VerticalLabel * label = [[self alloc] init];
+    label.textColor = color;
+    label.font = font;
+    return label;
+}
+
+
+-(void)setLabelText:(NSString *)labelText
+{
+    if (_labelText != labelText) {
+        _labelText = labelText;
+        [self setNeedsDisplay];
+    }
+}
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor grayColor];
-//        self.image = [VerticalLabel imageWithString:@"（" size:CGSizeMake(30, 30)];
-
     }
     return self;
 }
@@ -27,52 +42,53 @@ static inline double radians (double degrees) {return degrees * M_PI/180;}
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect {
     // Drawing code
-    //获取图形上下文
-//    CGContextRef ctx=UIGraphicsGetCurrentContext();
-////    CGContextRotateCTM(ctx, radians(70));
-//    
-//    CGContextTranslateCTM(ctx, rect.size.width/2, rect.size.height/2);
-//    [@"测试旋转" drawAtPoint:(CGPoint){200,50} withAttributes:@{NSFontAttributeName:[UIFont boldSystemFontOfSize:16],NSForegroundColorAttributeName:[UIColor redColor]}];
-//    CGContextRotateCTM(ctx, radians(30));
-//    
-//  //渲染
-//     CGContextStrokePath(ctx);
-//
-//    return;
     
-    NSString * content = @"今天—是(星期五）";
+    NSString * content = @"今天是(星期五）";
+//    NSString * content = _labelText;
     float y = 10;
 
-    NSArray * signArr = @[@"(",@")",@"（",@"）",@"—",@"",@""];
+    float x = 5;
+    
+    float lineSpace = 3;
+    
+    NSArray * cnArr = @[@"（",@"）",@"—"];
+    NSArray * enArr = @[@"(",@")"];
 
     for (int i = 0; i < content.length; i ++) {
         
         
         NSString * str = [content substringWithRange:(NSRange){i,1}];
-       CGSize size =  [str boundingRectWithSize:(CGSize){20,20} options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont boldSystemFontOfSize:16]} context:nil].size;
+        
+       CGSize size =  [str boundingRectWithSize:(CGSize){40,40} options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:_font} context:nil].size;
 
-        NSDictionary * attributes = @{NSFontAttributeName:[UIFont boldSystemFontOfSize:16],NSForegroundColorAttributeName:[UIColor redColor]};
+        NSDictionary * attributes = @{NSFontAttributeName:_font,NSForegroundColorAttributeName:[UIColor redColor]};
+        
         CGFloat margin = 0;
         
-        if ([signArr containsObject:str] ) {
-            if ([str isEqual:@"("]) {
-                CGFloat maxL = MAX(size.width,size.height);
-                margin = size.height - size.width;
-                
-                UIImage * image = [self imageWithString:str size:CGSizeMake(maxL,maxL) fontNumber:16 color:[attributes objectForKey:NSForegroundColorAttributeName]];
-                [image drawInRect:(CGRect){100-1.5,y,CGSizeMake(maxL,maxL)}];
-                size = CGSizeMake(maxL,maxL);
-            }else{
-                UIImage * image = [self imageWithString:str size:CGSizeMake(MAX(size.width, [UIFont boldSystemFontOfSize:16].lineHeight),size.height) fontNumber:16 color:[attributes objectForKey:NSForegroundColorAttributeName]];
-                [image drawInRect:(CGRect){100,y,size}];
-
-            }
+        if ([cnArr containsObject:str] ) {
+            //中文符号
+            UIImage * image = [self imageWithString:str size:CGSizeMake(MAX(size.width, [UIFont boldSystemFontOfSize:16].lineHeight),size.height) fontNumber:16 color:[attributes objectForKey:NSForegroundColorAttributeName]];
+            [image drawInRect:(CGRect){x,y,size}];
+        }else if ([enArr containsObject:str]){
+            //英文符号
+            CGFloat maxL = MAX(size.width,size.height);
+            margin = size.height - size.width;
+            
+            UIImage * image = [self imageWithString:str size:CGSizeMake(maxL,maxL) fontNumber:_font.pointSize color:[attributes objectForKey:NSForegroundColorAttributeName]];
+            [image drawInRect:(CGRect){x-1.5,y,CGSizeMake(maxL,maxL)}];
+            size = CGSizeMake(maxL,maxL);
+            
         }else{
-            [str drawAtPoint:(CGPoint){100,y} withAttributes:attributes];
- 
+            [str drawAtPoint:(CGPoint){x,y} withAttributes:attributes];
+
         }
         
-        y += size.height + 3 - margin;
+        y += size.height + lineSpace - margin;
+        
+        if (y > rect.size.height) {
+            //已超出view的height
+            break;
+        }
     }
 }
 

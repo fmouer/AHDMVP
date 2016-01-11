@@ -10,5 +10,12 @@
 
 @interface VerticalLabel : UIView
 
-@property (nonatomic, strong)UIImage * image ;
+@property (nonatomic, strong)UIFont * font;
+
+@property (nonatomic, strong)UIColor * textColor;
+
+@property (nonatomic, strong)NSString * labelText;
+
++ (VerticalLabel *)verticalLabel:(UIFont *)font color:(UIColor *)color;
+
 @end

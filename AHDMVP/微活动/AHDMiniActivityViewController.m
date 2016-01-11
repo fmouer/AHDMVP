@@ -27,7 +27,7 @@
 
     _collectionControl = [[AHDCollectionControl alloc] initWithFrame:rect helperModel:[[AHDMiniActivityHelper alloc] init]];
     
-    _collectionControl.itemSize = CGSizeMake(rect.size.width/2, 200);
+    _collectionControl.itemSize = CGSizeMake(rect.size.width/2, 350);
     _collectionControl.delegate =  self;
     [self.view addSubview:_collectionControl];
 

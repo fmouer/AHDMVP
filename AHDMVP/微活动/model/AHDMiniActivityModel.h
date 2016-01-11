@@ -8,9 +8,14 @@
 
 #import "AHDBaseControlModel.h"
 #import "AHDActionProtocol.h"
+#import "AHDUserModel.h"
 
 @interface AHDMiniActivityModel : AHDBaseControlModel<AHDActionProtocol>
 
 @property (nonatomic, strong)NSString * content;
+
+@property (nonatomic, strong)AHDUserModel * userModel;
+
+@property (nonatomic, strong)NSString * timeString;
 
 @end

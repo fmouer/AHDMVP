@@ -75,7 +75,7 @@ static inline double radians (double degrees) {return degrees * M_PI/180;}
             margin = size.height - size.width;
             
             UIImage * image = [self imageWithString:str size:CGSizeMake(maxL,maxL) fontNumber:_font.pointSize color:[attributes objectForKey:NSForegroundColorAttributeName]];
-            [image drawInRect:(CGRect){x-1.5,y,CGSizeMake(maxL,maxL)}];
+            [image drawInRect:(CGRect){x-0,y,CGSizeMake(maxL,maxL)}];
             size = CGSizeMake(maxL,maxL);
             
         }else{

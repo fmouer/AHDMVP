@@ -34,13 +34,10 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor colorWithRed:random()%255 / 255.0 green:random()%255 /255.0 blue:random()%255 / 255.0 alpha:1];
-
-        _userHeaderButton.frame = CGRectMake(0, 0, 50, 50);
-        _userHeaderButton.backgroundColor = [UIColor blackColor];
-        [self addSubview:_userHeaderButton];
         
-      
-        
+        [self initialization];
+        [self toLayoutSubViews];
+        [self loadSubView];
         
         UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
         [button addTarget:self action:@selector(clickButtonEvent) forControlEvents:UIControlEventTouchUpInside];
@@ -68,13 +65,15 @@
 {
     _userHeaderButton.frame = CGRectMake(0, 40, 50, 50);
     
-    _activityTagLabel.frame = CGRectMake(120, 15, 30, 100);
-    _timeLabel.frame = CGRectMake(95, 15, 30, 100);
+    _activityTagLabel.frame = CGRectMake(130, 15, 30, 100);
+    _titleLabel.frame = CGRectMake(95, 15, 30, 100);
     
-    _numberLabel.frame = CGRectMake(15, CGRectGetMaxY(_userHeaderButton.frame) + 25, 30, 100);
-    _feeTypeLabel.frame = CGRectMake(46, CGRectGetMaxY(_userHeaderButton.frame) + 25, 30, 100);
-    _timeLabel.frame = CGRectMake(77, CGRectGetMaxY(_userHeaderButton.frame) + 25, 30, 100);
-    _addressLabel.frame = CGRectMake(108, CGRectGetMaxY(_userHeaderButton.frame) + 25, 30, 100);
+    float height = 150;
+    float y = CGRectGetMaxY(_userHeaderButton.frame) + 25;
+    _numberLabel.frame = CGRectMake(15, y, 30, height);
+    _feeTypeLabel.frame = CGRectMake(46, y, 30, height);
+    _timeLabel.frame = CGRectMake(77, y, 30, height);
+    _addressLabel.frame = CGRectMake(108, y, 30, height);
 }
 
 - (void)loadSubView

@@ -43,7 +43,7 @@
 {
     NSMutableArray * data = [[NSMutableArray alloc] init];
     for (int i = 0; i < 24; i ++) {
-        [data addObject:@""];
+        [data addObject:@{}];
     }
     return data;
 }

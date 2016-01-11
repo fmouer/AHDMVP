@@ -1,5 +1,5 @@
 # AHDMVP
-采用M-V-P(protocol)模式实现可扩展的各种列表模式
+采用M-V-P(protocol)模式实现可扩展的各种列表模式<br>
 以下是项目的结构模式：
 ![screenshot1](https://github.com/fmouer/AHDMVP/raw/master/images/MVP.png)<br>
 以下是协议的思维导图：

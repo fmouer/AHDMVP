@@ -87,9 +87,11 @@
     if (_flowLayout == nil) {
         _flowLayout = [[AHDCollectionControlLayout alloc] init];
 
+        /*
         if (!CGSizeEqualToSize(self.sectionHeaderSize, CGSizeZero)){
             _flowLayout.headerReferenceSize = self.sectionHeaderSize;
         }
+        */
         if (_minimumLineSpacing) {
             _flowLayout.minimumLineSpacing = _minimumLineSpacing;
         }
@@ -339,7 +341,14 @@
     [self.controlModel setCellSizeWith:model size:size];
     return size;
 }
-
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
+{
+    if (self.controlModel.headerModel) {
+        return self.sectionHeaderSize;
+    }else{
+        return CGSizeZero;
+    }
+}
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {

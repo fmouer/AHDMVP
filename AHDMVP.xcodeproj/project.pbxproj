@@ -24,6 +24,7 @@
 		35F42F611C38F0F400341AA2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35F42F601C38F0F400341AA2 /* Assets.xcassets */; };
 		35F42F641C38F0F400341AA2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35F42F621C38F0F400341AA2 /* LaunchScreen.storyboard */; };
 		755AE5A81C435A09008DE6D2 /* AHDUserModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 755AE5A71C435A09008DE6D2 /* AHDUserModel.m */; };
+		755AE5AD1C4398A6008DE6D2 /* CellMemberView.m in Sources */ = {isa = PBXBuildFile; fileRef = 755AE5AC1C4398A6008DE6D2 /* CellMemberView.m */; };
 		759311E31C3F635800B1F514 /* MJRefreshAutoFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 759311B91C3F635800B1F514 /* MJRefreshAutoFooter.m */; };
 		759311E41C3F635800B1F514 /* MJRefreshBackFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 759311BB1C3F635800B1F514 /* MJRefreshBackFooter.m */; };
 		759311E51C3F635800B1F514 /* MJRefreshComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 759311BD1C3F635800B1F514 /* MJRefreshComponent.m */; };
@@ -116,6 +117,8 @@
 		35F42F651C38F0F400341AA2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		755AE5A61C435A09008DE6D2 /* AHDUserModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AHDUserModel.h; sourceTree = "<group>"; };
 		755AE5A71C435A09008DE6D2 /* AHDUserModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHDUserModel.m; sourceTree = "<group>"; };
+		755AE5AB1C4398A6008DE6D2 /* CellMemberView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CellMemberView.h; sourceTree = "<group>"; };
+		755AE5AC1C4398A6008DE6D2 /* CellMemberView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CellMemberView.m; sourceTree = "<group>"; };
 		759311B81C3F635800B1F514 /* MJRefreshAutoFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJRefreshAutoFooter.h; sourceTree = "<group>"; };
 		759311B91C3F635800B1F514 /* MJRefreshAutoFooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJRefreshAutoFooter.m; sourceTree = "<group>"; };
 		759311BA1C3F635800B1F514 /* MJRefreshBackFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJRefreshBackFooter.h; sourceTree = "<group>"; };
@@ -397,6 +400,15 @@
 			path = other;
 			sourceTree = "<group>";
 		};
+		755AE5AA1C439885008DE6D2 /* member */ = {
+			isa = PBXGroup;
+			children = (
+				755AE5AB1C4398A6008DE6D2 /* CellMemberView.h */,
+				755AE5AC1C4398A6008DE6D2 /* CellMemberView.m */,
+			);
+			path = member;
+			sourceTree = "<group>";
+		};
 		759311B61C3F635800B1F514 /* MJRefresh */ = {
 			isa = PBXGroup;
 			children = (
@@ -616,6 +628,7 @@
 		75A186CD1C3BB8C1009B1F7B /* cell */ = {
 			isa = PBXGroup;
 			children = (
+				755AE5AA1C439885008DE6D2 /* member */,
 				759312191C3F968700B1F514 /* verticalLabel */,
 				75A186D01C3BB942009B1F7B /* AHDMiniActivityCell.h */,
 				75A186D11C3BB942009B1F7B /* AHDMiniActivityCell.m */,
@@ -839,6 +852,7 @@
 				75B3B57F1C3E0D3B00CF9B6C /* AHDTagCell.m in Sources */,
 				75B3B57C1C3E0D2B00CF9B6C /* AHDTagModel.m in Sources */,
 				75A186D81C3BB9A9009B1F7B /* AHDMiniActivityModel.m in Sources */,
+				755AE5AD1C4398A6008DE6D2 /* CellMemberView.m in Sources */,
 				35D972CB1C3D78E000AFA03C /* AHDCollectionControlLayout.m in Sources */,
 				35D972CC1C3D78E000AFA03C /* AHDBaseDataAction.m in Sources */,
 				75A186F21C3BC5B3009B1F7B /* AHDShowHelper.m in Sources */,

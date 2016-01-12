@@ -42,8 +42,17 @@
 - (NSArray * )getData
 {
     NSMutableArray * data = [[NSMutableArray alloc] init];
+    NSDictionary * user = @{@"userId":@"1",@"imgUrl":@"image",@"sex":@"0",@"nameNote":@"fmouer",@"nickName":@"昵称"};
+    
     for (int i = 0; i < 24; i ++) {
-        [data addObject:@{}];
+        [data addObject:@{@"time":@"2015-10-20",
+                          @"address":@"海淀区上地五街",
+                          @"title":@"my love",
+                          @"tag":@"标签",
+                          @"fee":@"1",
+                          @"number":@"求105人",
+                          @"creator":user,
+                          @"member":@[user,user,user,user,user]}];
     }
     return data;
 }

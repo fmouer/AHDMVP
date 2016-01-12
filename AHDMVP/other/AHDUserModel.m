@@ -7,7 +7,12 @@
 //
 
 #import "AHDUserModel.h"
+#import "MJExtension.h"
 
 @implementation AHDUserModel
++(NSDictionary *)mj_replacedKeyFromPropertyName
+{
+    return @{@"sexId":@"sex",@"headImagePath":@"imgUrl"};
+}
 
 @end

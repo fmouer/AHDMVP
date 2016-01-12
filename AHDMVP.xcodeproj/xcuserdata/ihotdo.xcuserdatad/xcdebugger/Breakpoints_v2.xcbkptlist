@@ -32,32 +32,48 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "AHDMVP/&#x5fae;&#x6d3b;&#x52a8;/cell/VerticalLabel.m"
-            timestampString = "474183470.305568"
+            filePath = "AHDMVP/&#x5fae;&#x6d3b;&#x52a8;/cell/member/cellMemberView.m"
+            timestampString = "474193455.867379"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "137"
-            endingLineNumber = "137"
-            landmarkName = "+imageWithString:size:"
+            startingLineNumber = "20"
+            endingLineNumber = "20"
+            landmarkName = "-layoutSubviews"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "AHDMVP/&#x5fae;&#x6d3b;&#x52a8;/cell/member/cellMemberView.m"
+            timestampString = "474193943.676942"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "41"
+            endingLineNumber = "41"
+            landmarkName = "-setMembers:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "AHDMVP/&#x5fae;&#x6d3b;&#x52a8;/cell/VerticalLabel.m"
-            timestampString = "474183470.305568"
+            timestampString = "474271368.570542"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "114"
-            endingLineNumber = "114"
-            landmarkName = "+imageWithString:size:"
+            startingLineNumber = "116"
+            endingLineNumber = "116"
+            landmarkName = "-drawRect:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

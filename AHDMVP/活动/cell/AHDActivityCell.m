@@ -39,9 +39,9 @@
     AHDActivityModel * actModel = (AHDActivityModel *)model;
     _titleLabel.text = actModel.title;
     
-    _dateLabel.text = actModel.date;
+//    _dateLabel.text = actModel.date;
 
-    _peopleLabel.text = actModel.peopleNumber;
+//    _peopleLabel.text = actModel.peopleNumber;
 }
 
 

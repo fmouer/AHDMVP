@@ -7,8 +7,6 @@
 //
 
 #import "VerticalLabel.h"
-#import <CoreText/CoreText.h>
-static inline double radians (double degrees) {return degrees * M_PI/180;}
 
 @implementation VerticalLabel
 
@@ -28,6 +26,26 @@ static inline double radians (double degrees) {return degrees * M_PI/180;}
         [self setNeedsDisplay];
     }
 }
+
+-(void)setTitleImageName:(NSString *)imageName
+{
+    if (_flagImageView == nil) {
+        _flagImageView = [[UIImageView alloc] initWithFrame:(CGRect){5,_top,20,20}];
+        [self addSubview:_flagImageView];
+        _flagImageView.backgroundColor = [UIColor blackColor];
+    }
+    _top = CGRectGetHeight(_flagImageView.frame) + 3;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _top = 3;
+    }
+    return self;
+}
+
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -43,105 +61,113 @@ static inline double radians (double degrees) {return degrees * M_PI/180;}
 - (void)drawRect:(CGRect)rect {
     // Drawing code
     
-    NSString * content = @"今天是(星期五）";
-//    NSString * content = _labelText;
-    float y = 10;
+    NSString * content = _labelText;
+    float y = _top + 3;
 
     float x = 5;
     
-    float lineSpace = 3;
+    float lineSpace = 2;
+    
+    //修正英文字母过宽问题
+    float enSpace = 9;
     
     NSArray * cnArr = @[@"（",@"）",@"—"];
     NSArray * enArr = @[@"(",@")"];
 
+    //获取数字，两个相连数字同行显示
+    NSString * match = @"(\\d+)"; //(\\d+)   [^0-9]
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:match options:0 error:nil];
+    NSArray<NSTextCheckingResult *> * results =  [regex matchesInString:content options:NSMatchingReportCompletion range:(NSRange){0,content.length}];
+    
+    NSMutableArray * indexs = [[NSMutableArray alloc]init];
+    for (NSTextCheckingResult * result in results) {
+        if (result.range.length == 2) {
+            //两个数字相连
+            [indexs addObject:[NSNumber numberWithInteger:result.range.location]];
+        }
+        NSString * subString = [content substringWithRange:result.range];
+        NSLog(@"sub is %@",subString);
+    }
+    
+    CGSize formSize =  [@"字" boundingRectWithSize:(CGSize){40,40} options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:_font} context:nil].size;
+
+  
+    
     for (int i = 0; i < content.length; i ++) {
         
+        NSInteger length = 1;
+        if ([indexs containsObject:[NSNumber numberWithInteger:i]]) {
+            //判断是否是两个数字的index，需要读取两个字符
+            length = 2;
+        }
         
-        NSString * str = [content substringWithRange:(NSRange){i,1}];
+        NSString * str = [content substringWithRange:(NSRange){i,length}];
+        
+        //判断字符串的字节
+       const char * s = [str cStringUsingEncoding:NSUTF8StringEncoding];
+
+        size_t bytesLength = strlen(s);
         
        CGSize size =  [str boundingRectWithSize:(CGSize){40,40} options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:_font} context:nil].size;
 
         NSDictionary * attributes = @{NSFontAttributeName:_font,NSForegroundColorAttributeName:[UIColor redColor]};
         
-        CGFloat margin = 0;
+        unichar char_ = [str characterAtIndex:0];
         
-        if ([cnArr containsObject:str] ) {
-            //中文符号
-            UIImage * image = [self imageWithString:str size:CGSizeMake(MAX(size.width, [UIFont boldSystemFontOfSize:16].lineHeight),size.height) fontNumber:16 color:[attributes objectForKey:NSForegroundColorAttributeName]];
-            [image drawInRect:(CGRect){x,y,size}];
-        }else if ([enArr containsObject:str]){
+         if ([enArr containsObject:str] || (char_ > 'a' && char_ < 'z') || (char_ > 'A' && char_ < 'Z')){
             //英文符号
             CGFloat maxL = MAX(size.width,size.height);
-            margin = size.height - size.width;
-            
             UIImage * image = [self imageWithString:str size:CGSizeMake(maxL,maxL) fontNumber:_font.pointSize color:[attributes objectForKey:NSForegroundColorAttributeName]];
             [image drawInRect:(CGRect){x-0,y,CGSizeMake(maxL,maxL)}];
-            size = CGSizeMake(maxL,maxL);
+            size.height -= enSpace;
+         }else if ([cnArr containsObject:str]) {
+             //中文符号
+             UIImage * image = [self imageWithString:str size:CGSizeMake(MAX(size.width, [UIFont boldSystemFontOfSize:16].lineHeight),size.height) fontNumber:16 color:[attributes objectForKey:NSForegroundColorAttributeName]];
+             [image drawInRect:(CGRect){x,y,size}];
+         }else{
+            [str drawAtPoint:(CGPoint){x + (formSize.width - size.width)/2,y} withAttributes:attributes];
+        }
+        if ([str isEqualToString:@" "]) {
+            size.height -= enSpace;
+        }
+        //修正一个字符时(数字，英文字符等) 间隔过大的问题
+        CGFloat margin = ((bytesLength == 1)?(size.height - size.width)/3:0);
+
+        y += size.height  + lineSpace - margin ;
+        
+        if (length == 2) {
+            i ++;
+        }
+        
+        if (i < content.length) {
+            NSString * laterStr = [content substringWithRange:(NSRange){i + 1,content.length - i - 1}];
             
-        }else{
-            [str drawAtPoint:(CGPoint){x,y} withAttributes:attributes];
-
+            CGSize laterSize =  [laterStr boundingRectWithSize:(CGSize){40,40} options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:_font} context:nil].size;
+            
+            
+            //因为 ··· 会占一个多字的高度，所以需要从最后两个字的时候就考虑是否有足够多的高度
+            if (y > rect.size.height - MAX(15*2, laterSize.width) - lineSpace && content.length > i + 2) {
+                //过长则添加省略号
+                NSString * dotString = @"···";
+                for (int j = 0; j < dotString.length;j ++){
+                    NSString * strj = [dotString substringWithRange:(NSRange){j,1}];
+                    CGSize sizej =  [strj boundingRectWithSize:(CGSize){40,40} options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:_font} context:nil].size;
+                    [strj drawAtPoint:(CGPoint){x + (formSize.width - sizej.width)/2,y} withAttributes:attributes];
+                    y+=sizej.height - 11;
+                }
+                //已超出view的height
+                break;
+            }
         }
         
-        y += size.height + lineSpace - margin;
-        
-        if (y > rect.size.height) {
-            //已超出view的height
-            break;
-        }
     }
-}
-
-+ (UIImage *)imageWithString:(NSString *)str size:(CGSize)size
-{
-//    UIImage * aImage = [UIImage imageNamed:@"22"];
-
-    CGContextRef ctx=UIGraphicsGetCurrentContext();
-    UIGraphicsBeginImageContext(size);
-
-    //矩阵操作
-    //注意点：设置矩阵操作必须要在添加绘图信息之前
-    //旋转45度
-    CGContextRotateCTM(ctx, M_PI_4);
-    
-    //绘图
-    //画四边形
-//    CGContextAddRect(ctx, CGRectMake(150, 100, 100, 100));
-    //画一个圆
-//    CGContextAddEllipseInRect(ctx, CGRectMake(200, 200, 50, 50));
-    //渲染
-    CGContextStrokePath(ctx);
-    UIImage * image3 = UIGraphicsGetImageFromCurrentImageContext();
-
-    return image3;
-    
-    CGSize drectSize = CGSizeMake(size.width , size.height );
-
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    UIGraphicsBeginImageContext(drectSize);
-    
-    CGContextRotateCTM(context, M_PI_4);
-
-    [str drawAtPoint:CGPointZero withAttributes:@{NSFontAttributeName:[UIFont boldSystemFontOfSize:16]}];
-    CGAffineTransform transform = CGAffineTransformIdentity;
-    transform = CGAffineTransformRotate(transform, M_PI_2);
-
-//    CGContextConcatCTM(context, transform);
-//    CGContextDrawImage(context, CGRectMake(0,0,aImage.size.width,aImage.size.height), aImage.CGImage);
-
-//     CGContextRotateCTM(context, radius);
-//    CGContextSaveGState(context);
-    
-    UIImage * image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return image;
 }
 
 
 - (UIImage *)imageWithString:(NSString *)str size:(CGSize)size fontNumber:(float)number color:(UIColor *)color
 {
     
-    NSInteger scale = 2;
+    NSInteger scale = [UIScreen mainScreen].scale;
     CGSize drectSize = CGSizeMake(size.width * scale , size.height * scale);
     
     

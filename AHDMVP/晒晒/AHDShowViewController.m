@@ -34,13 +34,13 @@
     [self.view addSubview:_collectionControl];
     
     _collectionControl.sectionHeaderSize = CGSizeMake(rect.size.width, 250);
-    [_collectionControl setControlHeaderModel:[[AHDHeaderModel alloc] init]];
 
     
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
+    [_collectionControl setControlHeaderModel:[[AHDHeaderModel alloc] init]];
     [_collectionControl setControlData:[self getData] page:0];
 
 }

@@ -24,13 +24,15 @@ typedef enum {
 
 @protocol AHDHelperProtocol;
 @protocol AHDModelProtocol;
+@protocol AHDCellProtocol;
 @protocol AHDCollectionControlDelegate;
-@class AHDBaseDataAction;
+@protocol AHDCollectionScrollDelegate;
 
 @interface AHDCollectionControl : UIView<UICollectionViewDataSource,UICollectionViewDelegate>
 {
     UICollectionView    *   _collectionView;
 }
+@property (nonatomic, readonly)UICollectionView * collectionView;
 
 @property (nonatomic, assign)AHDRefreshType  refreshType;
 
@@ -46,18 +48,29 @@ typedef enum {
  */
 @property (nonatomic, assign)CGSize sectionHeaderSize;
 
-///cell 左右最小间距
+///cell 上下最小间距
 @property (nonatomic) CGFloat minimumLineSpacing;
 
-///cell 上下最小间距
+///cell 左右最小间距
 @property (nonatomic) CGFloat minimumInteritemSpacing;
 
 ///collection edgeInserts (cell上下左右 和 collectionView 的最小间隔)
 @property (nonatomic, assign)UIEdgeInsets collectionEdgeInsets;
 
+/**
+ *  CollectionControl Action 代理
+ */
 @property (nonatomic, weak)id<AHDCollectionControlDelegate>delegate;
 
+/**
+ *  CollectionView 滚动代理
+ */
+@property (nonatomic, weak)id<AHDCollectionScrollDelegate>scrollDelegate;
+
+
 - (instancetype)initWithHelperModel:(id<AHDHelperProtocol> )helperModel;
+
+- (instancetype)initWithHelperClass:(Class)helperClass;
 
 - (instancetype)initWithFrame:(CGRect)frame
                   helperModel:(id<AHDHelperProtocol>)helperModel;
@@ -69,19 +82,20 @@ typedef enum {
  */
 - (void)setControlHeaderModel:(id<AHDModelProtocol>)headerModel;
 
-- (void)setControlData:(id)objectInfo page:(NSInteger)page;
+- (void)setControlHelperModel:(id<AHDHelperProtocol>)helperModel;
+
+
+- (void)setControlData:(id)objectInfo page:(NSInteger)page completion:(void (^)())Completion;
+
+/**
+ *  根据model 获取cell
+ *
+ *  @param model cellModel
+ *
+ *  @return UICollectionViewCell
+ */
+- (UICollectionViewCell<AHDCellProtocol>*)collectionViewCellForModel:(id<AHDModelProtocol>)model;
 
 @end
 
 
-@protocol AHDCollectionControlDelegate <NSObject>
-
-@optional
-
-- (void)collectionControl:(AHDCollectionControl *)collectionControl requestPage:(NSInteger)page;
-
-- (BOOL)shouldCollectionControl:(AHDCollectionControl *)collectionControl willDataAction:(AHDBaseDataAction *)dataAction;
-
-- (void)collectionControl:(AHDCollectionControl *)collectionControl didDataAction:(AHDBaseDataAction*)dataAction;
-
-@end

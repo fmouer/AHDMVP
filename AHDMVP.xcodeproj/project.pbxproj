@@ -218,6 +218,10 @@
 		75B3B5811C3E0D4C00CF9B6C /* AHDTagViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHDTagViewController.m; sourceTree = "<group>"; };
 		75B3B5831C3E13F400CF9B6C /* AHDTagAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AHDTagAction.h; sourceTree = "<group>"; };
 		75B3B5841C3E13F400CF9B6C /* AHDTagAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHDTagAction.m; sourceTree = "<group>"; };
+		75CC55D11C466A250047152B /* AHDCollectionTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AHDCollectionTypes.h; sourceTree = "<group>"; };
+		75CC55D21C466A310047152B /* AHDCollection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AHDCollection.h; sourceTree = "<group>"; };
+		75CC55D31C466A5B0047152B /* AHDCollectionControlDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AHDCollectionControlDelegate.h; sourceTree = "<group>"; };
+		75CC55D41C466A5B0047152B /* AHDCollectionScrollDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AHDCollectionScrollDelegate.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -234,6 +238,7 @@
 		35D972A91C3D78E000AFA03C /* CollectionControl */ = {
 			isa = PBXGroup;
 			children = (
+				75CC55D01C466A250047152B /* extra */,
 				35D972AF1C3D78E000AFA03C /* Control */,
 				35D972AA1C3D78E000AFA03C /* Category */,
 				35D972B41C3D78E000AFA03C /* DataAction */,
@@ -258,10 +263,13 @@
 		35D972AF1C3D78E000AFA03C /* Control */ = {
 			isa = PBXGroup;
 			children = (
+				75CC55D21C466A310047152B /* AHDCollection.h */,
 				35D972B01C3D78E000AFA03C /* AHDCollectionControl.h */,
 				35D972B11C3D78E000AFA03C /* AHDCollectionControl.m */,
 				35D972B21C3D78E000AFA03C /* AHDCollectionControlLayout.h */,
 				35D972B31C3D78E000AFA03C /* AHDCollectionControlLayout.m */,
+				75CC55D31C466A5B0047152B /* AHDCollectionControlDelegate.h */,
+				75CC55D41C466A5B0047152B /* AHDCollectionScrollDelegate.h */,
 			);
 			path = Control;
 			sourceTree = "<group>";
@@ -703,6 +711,14 @@
 				75B3B5781C3E0D0A00CF9B6C /* AHDTagHelper.m */,
 			);
 			path = helper;
+			sourceTree = "<group>";
+		};
+		75CC55D01C466A250047152B /* extra */ = {
+			isa = PBXGroup;
+			children = (
+				75CC55D11C466A250047152B /* AHDCollectionTypes.h */,
+			);
+			path = extra;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

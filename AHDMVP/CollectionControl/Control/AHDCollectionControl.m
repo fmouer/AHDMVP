@@ -8,14 +8,16 @@
 
 #import "AHDCollectionControl.h"
 #import "AHDCollectionControlLayout.h"
+#import "AHDCollectionControlDelegate.h"
+#import "AHDCollectionScrollDelegate.h"
 
 #import "AHDCollectionControlModel.h"
+
 #import "AHDActionProtocol.h"
 #import "AHDControlActionHandler.h"
 
 #import "UICollectionView+RegisterClass.h"
 #import "AHDTransferModel.h"
-#import "AHDShowModel.h"
 #import <objc/runtime.h>
 
 #import "MJRefresh.h"
@@ -42,6 +44,9 @@
 @end
 
 @implementation AHDCollectionControl
+
+@synthesize collectionView = _collectionView;
+
 -(void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -64,6 +69,11 @@
 - (void)setControlHeaderModel:(id<AHDModelProtocol>)headerModel
 {
     self.controlModel.headerModel = headerModel;
+}
+
+-(void)setControlHelperModel:(id<AHDHelperProtocol>)helperModel
+{
+    self.helperModel = helperModel;
 }
 
 - (void)showAlertLabelWith:(NSString *)text
@@ -134,6 +144,35 @@
     }
     return self;
 }
+
+- (instancetype)initWithHelperClass:(Class)helperClass
+{
+    self = [super init];
+    if (self) {
+        [self initializeModel];
+        self.helperModel = [[helperClass alloc] init];
+
+    }
+    return self;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        [self initializeModel];
+    }
+    return self;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self initializeModel];
+    }
+    return self;
+}
 - (void)layoutSubviews
 {
     [self initCollectionView];
@@ -176,16 +215,18 @@
                 _refreshType == AHDRefreshTypeRefreshAndLoading) {
                 _collectionView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(refresh)];
             }
-            if (_beginRefreshing) {
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [_collectionView.mj_header beginRefreshing];
-                });
-            }
+           
             //上拉加载更多
             if (_refreshType == AHDRefreshTypeLoading ||
                 _refreshType == AHDRefreshTypeRefreshAndLoading) {
                 _collectionView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(loading)];
                 _collectionView.mj_footer.automaticallyHidden = YES;
+            }
+            
+            if (_beginRefreshing) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [_collectionView.mj_header beginRefreshing];
+                });
             }
         }
         
@@ -330,6 +371,9 @@
         }
         
         [_cellClassCaches setObject:cell forKey:cellIdentifer];
+        if ([cell respondsToSelector:@selector(setCalculateSizeType:)]) {
+            [cell setCalculateSizeType:YES];
+        }
     }
     
     [cell setCellModel:model];
@@ -338,9 +382,12 @@
      size =[cell getCellSize];
     NSLog(@"cell 实例计算 cell size");
 
+    //缓存size
     [self.controlModel setCellSizeWith:model size:size];
+    
     return size;
 }
+
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
 {
     if (self.controlModel.headerModel) {
@@ -415,7 +462,7 @@
  *  @param objectInfo 数据信息
  *  @param page       页码
  */
--(void)setControlData:(id)objectInfo page:(NSInteger)page
+-(void)setControlData:(id)objectInfo page:(NSInteger)page completion:(void (^)())completion
 {
     __weak typeof(UICollectionView *)wCollectionView = _collectionView;
     __weak typeof(AHDCollectionControl *)wSelf = self;
@@ -429,16 +476,41 @@
     [self.controlModel tableViewControlLoadDatas:objectInfo pages:page insertCompletion:^(NSArray<NSIndexPath *> *insertIndexPaths) {
         //插入新数据
         [wCollectionView insertItemsAtIndexPaths:insertIndexPaths];
+        
+        if (completion) {
+            completion();
+        }
+        
     } reloadCompletion:^{
         //第一页刷新
         [UIView performWithoutAnimation:^{
             [wCollectionView reloadData];
         }];
+        [wCollectionView.mj_footer resetNoMoreData];
+        if (completion) {
+            completion();
+        }
     } message:^(NSString *message) {
         //提示信息
         [wSelf showAlertLabelWith:message];
     }];
     
+}
+
+#pragma mark 界面已刷新
+- (void)collectionViewDidRefresh:(NSArray<NSIndexPath *> *)indexPaths transferModel:(AHDTransferModel *)transferModel
+{
+    if (_delegate && [_delegate respondsToSelector:@selector(collectionControlDidRefresh:indexPaths:transferModel:)]) {
+        [_delegate collectionControlDidRefresh:self indexPaths:indexPaths transferModel:transferModel];
+    }
+}
+
+#pragma mark collectionView 刷新之前
+- (void)collectionViewBeforeRefresh:(NSArray<NSIndexPath *> *)indexPaths transferModel:(AHDTransferModel *)transferModel
+{
+    if (_delegate && [_delegate respondsToSelector:@selector(collectionControlBeforeRefresh:indexPaths:transferModel:)]) {
+        [_delegate collectionControlBeforeRefresh:self indexPaths:indexPaths transferModel:transferModel];
+    }
 }
 
 #pragma mark 接收到更新通知
@@ -451,32 +523,47 @@
         return;
     }
     
-    __weak typeof(UICollectionView *) wCollectionView = _collectionView;
+    __weak typeof(AHDCollectionControl *) wSelf = self;
     
     if (transferModel.transerType == TranserTypeUpdate) {
         //数据更新
         if (transferModel.updateKeys.count) {
             [_controlModel updateModel:transferModel.model keys:transferModel.updateKeys completion:^(NSArray *updateIndexPaths) {
-                [wCollectionView reloadItemsAtIndexPaths:updateIndexPaths];
+                [wSelf collectionViewBeforeRefresh:updateIndexPaths transferModel:transferModel];
+                
+                [wSelf.collectionView reloadItemsAtIndexPaths:updateIndexPaths];
+                
+                [wSelf collectionViewDidRefresh:updateIndexPaths transferModel:transferModel];
             }];
         }else{
             [_controlModel updateModel:transferModel.model completion:^(NSIndexPath *updateIndexPath) {
-                [wCollectionView reloadItemsAtIndexPaths:@[updateIndexPath]];
+                [wSelf collectionViewBeforeRefresh:@[updateIndexPath] transferModel:transferModel];
+                
+                [wSelf.collectionView reloadItemsAtIndexPaths:@[updateIndexPath]];
+               
+                [wSelf collectionViewDidRefresh:@[updateIndexPath] transferModel:transferModel];
             }];
         }
         
     }else if (transferModel.transerType == TranserTypeInsert){
         //有数据插入
         [_controlModel insertModel:transferModel.model atIndex:0 completion:^(NSIndexPath *insertIdexPath) {
-            [wCollectionView setContentOffset:CGPointZero animated:YES];
-            [wCollectionView insertItemsAtIndexPaths:@[insertIdexPath]];
+            [wSelf collectionViewBeforeRefresh:@[insertIdexPath] transferModel:transferModel];
+            
+            [wSelf.collectionView setContentOffset:CGPointZero animated:YES];
+            [wSelf.collectionView insertItemsAtIndexPaths:@[insertIdexPath]];
+            
+            [wSelf collectionViewDidRefresh:@[insertIdexPath] transferModel:transferModel];
         }];
         
     }else if (transferModel.transerType == TranserTypeDelete){
         //有数据删除
         [_controlModel deleteModel:transferModel.model completion:^(NSArray *deleteIndexPaths) {
-            _flowLayout.changeCollectionLayout = YES;
-                [wCollectionView deleteItemsAtIndexPaths:deleteIndexPaths];
+            [wSelf collectionViewBeforeRefresh:deleteIndexPaths transferModel:transferModel];
+            
+            [wSelf.collectionView deleteItemsAtIndexPaths:deleteIndexPaths];
+            
+            [wSelf collectionViewDidRefresh:deleteIndexPaths transferModel:transferModel];
         }];
     }
 }
@@ -495,6 +582,18 @@
         [_delegate collectionControl:self requestPage:_controlModel.currentPage + 1];
     }
 }
+#pragma mark -
+#pragma mark 根据 model 获取cell
+- (UICollectionViewCell<AHDCellProtocol>*)collectionViewCellForModel:(id<AHDModelProtocol>)model
+{
+    NSUInteger index = [self.controlModel indexOfModel:model];
+    UICollectionViewCell<AHDCellProtocol> * cell = nil;
+    if (index != NSNotFound) {
+        NSIndexPath * indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+        cell = (UICollectionViewCell<AHDCellProtocol> *)[_collectionView cellForItemAtIndexPath:indexPath];
+    }
+    return cell;
+}
 
 #pragma mark -
 
@@ -507,6 +606,48 @@
         existMethod = YES;
     }
     return existMethod;
+}
+
+
+
+#pragma mark - UIScrollViewDelegate
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    if (_scrollDelegate && [_scrollDelegate respondsToSelector:@selector(collectionControl:scrollViewDidEndDecelerating:)]) {
+        [_scrollDelegate collectionControl:self scrollViewDidEndDecelerating:scrollView];
+    }
+}
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    if (_scrollDelegate && [_scrollDelegate respondsToSelector:@selector(scrollViewWillBeginDragging:)]) {
+        [_scrollDelegate collectionControl:self scrollViewWillBeginDragging:scrollView];
+    }
+}
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
+{
+    if (_scrollDelegate && [_scrollDelegate respondsToSelector:@selector(collectionControl:scrollViewWillEndDragging:withVelocity:targetContentOffset:)]) {
+        [_scrollDelegate collectionControl:self scrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
+    }
+}
+
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
+{
+    if (_scrollDelegate && [_scrollDelegate respondsToSelector:@selector(collectionControl:scrollViewDidEndScrollingAnimation:)]) {
+        [_scrollDelegate collectionControl:self scrollViewDidEndScrollingAnimation:scrollView];
+    }
+}
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (_scrollDelegate && [_scrollDelegate respondsToSelector:@selector(collectionControl:scrollViewDidScroll:)]) {
+        [_scrollDelegate collectionControl:self scrollViewDidScroll:scrollView];
+    }
+
+}
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if (_scrollDelegate && [_scrollDelegate respondsToSelector:@selector(collectionControl:scrollViewDidEndDragging:willDecelerate:)]) {
+        [_scrollDelegate collectionControl:self scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
+    }
 }
 /*
 // Only override drawRect: if you perform custom drawing.

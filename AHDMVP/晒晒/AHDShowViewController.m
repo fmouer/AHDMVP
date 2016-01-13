@@ -7,7 +7,7 @@
 //
 
 #import "AHDShowViewController.h"
-#import "AHDCollectionControl.h"
+#import "AHDCollection.h"
 #import "AHDShowHelper.h"
 #import "AHDHeaderModel.h"
 
@@ -41,7 +41,7 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     [_collectionControl setControlHeaderModel:[[AHDHeaderModel alloc] init]];
-    [_collectionControl setControlData:[self getData] page:0];
+    [_collectionControl setControlData:[self getData] page:0 completion:nil];
 
 }
 

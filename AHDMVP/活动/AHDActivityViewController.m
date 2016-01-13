@@ -7,7 +7,8 @@
 //
 
 #import "AHDActivityViewController.h"
-#import "AHDCollectionControl.h"
+#import "AHDCollection.h"
+
 #import "AHDActivityHelper.h"
 
 @interface AHDActivityViewController ()<AHDCollectionControlDelegate>
@@ -28,7 +29,6 @@
     _collectionControl.refreshType = AHDRefreshTypeRefreshAndLoading;
     _collectionControl.itemSize = CGSizeMake(rect.size.width, 100);
     _collectionControl.delegate =  self;
-    _collectionControl.collectionEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
     [self.view addSubview:_collectionControl];
     
     _collectionControl.beginRefreshing = YES;
@@ -56,7 +56,7 @@
 {
     NSLog(@"刷新 page %d",page);
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [_collectionControl setControlData:[self getData] page:page];
+        [_collectionControl setControlData:[self getData] page:page completion:nil];
     });
 }
 

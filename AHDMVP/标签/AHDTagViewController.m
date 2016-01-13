@@ -7,7 +7,7 @@
 //
 
 #import "AHDTagViewController.h"
-#import "AHDCollectionControl.h"
+#import "AHDCollection.h"
 #import "AHDTagHelper.h"
 #import "AHDTagModel.h"
 #import "AHDTagAction.h"
@@ -43,7 +43,7 @@
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    [_collectionControl setControlData:[self getData] page:0];
+    [_collectionControl setControlData:[self getData] page:0 completion:nil];
 }
 
 

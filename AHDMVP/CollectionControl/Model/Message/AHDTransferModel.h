@@ -8,12 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "AHDModelProtocol.h"
-
-typedef NS_ENUM(NSInteger, TranserType) {
-    TranserTypeUpdate   ,
-    TranserTypeInsert   ,
-    TranserTypeDelete   ,
-};
+#import "AHDBaseDataAction.h"
+#import "AHDCollectionTypes.h"
 
 @interface AHDTransferModel : NSObject
 
@@ -30,5 +26,7 @@ typedef NS_ENUM(NSInteger, TranserType) {
 @property (nonatomic, strong)NSArray * updateKeys;
 
 @property (nonatomic, strong)NSDictionary * info;
+
+@property (nonatomic, strong)AHDBaseDataAction * dataAction;
 
 @end

@@ -115,9 +115,9 @@
                 
                 AHDBaseControlModel * baseModel = [aclass mj_objectWithKeyValues:dict];
                                 
-//                if ([baseModel respondsToSelector:@selector(loadModelInfo:)]) {
-//                    [baseModel loadModelInfo:dict];
-//                }
+                if ([baseModel respondsToSelector:@selector(loadModelInfo:)]) {
+                    [baseModel loadModelInfo:dict];
+                }
                 baseModel.controlModel = self;
                 [_modelArrays addObject:baseModel];
             }
@@ -155,19 +155,29 @@
               keys:(NSArray *)keys
         completion:(void (^)(NSArray * updateIndexPaths))completion
 {
-    NSString * filterProperty = [model updateFilterProperty];
-    id value = [model filterValue];
+    //获取筛选的key path
+    NSString * filterProperty = [model updateFilterKeyPath];
     
-    //这个方法还没有测试，哈哈~~~，有bug再调整
-    NSPredicate * predicate = [NSPredicate predicateWithFormat:@"%@ == %@",filterProperty,value];
+    id value = [(NSObject *)model valueForKey:filterProperty];
+    
+    NSString * predicateStr = nil;
+    if ([value isKindOfClass:[NSNumber class]]) {
+        predicateStr = [NSString stringWithFormat:@"%@ == %@",filterProperty,value];
+    }else{
+        predicateStr = [NSString stringWithFormat:@"%@ LIKE[cd] '%@'",filterProperty,value];
+    }
+    //这个方法已测试，number 类型 predicateStr 直接 == ，字符串类型 用like，
+    NSPredicate * predicate = [NSPredicate predicateWithFormat:predicateStr];
     NSArray * results = [self.modelArrays filteredArrayUsingPredicate:predicate];
     if (results.count) {
+        //获取到筛选结果
         NSMutableArray * updateIndexPaths = [[NSMutableArray alloc] initWithCapacity:results.count];
         for (id<AHDModelProtocol>subModel in results) {
             NSInteger updateIndex = [self indexOfModel:subModel];
             for (NSString * key in keys) {
-                id value = [(NSObject *)model valueForKey:key];
-                [(NSObject *)subModel setValue:value forKey:key];
+                //更新keys 中的属性
+                id updateValue = [(NSObject *)model valueForKey:key];
+                [(NSObject *)subModel setValue:updateValue forKey:key];
             }
             [self replaceModel:subModel atIndex:updateIndex];
             [updateIndexPaths addObject:[NSIndexPath indexPathForRow:updateIndex inSection:0]];

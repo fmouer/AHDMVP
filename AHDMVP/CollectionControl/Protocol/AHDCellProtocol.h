@@ -31,9 +31,16 @@ typedef void (^ CellSizeBlock)(CGSize size);
  *  cell 操作通过 operationBlock，给model传值交互。
  *  dataAction 处理完之后 通过-updatePartOfCell:result: 方法更新局部信息
  *
- *  @param operationBlock <#operationBlock description#>
+ *  @param operationBlock CellOperationBlock
  */
 - (void)setCellOpeationBlock:(CellOperationBlock)operationBlock;
+
+/**
+ * calculateSizeType 为 YES 时，该cell只为计算高度，不会用于展示，所以有些只为展示相关才有的操作可省略
+ *
+ *  @param type BOOL
+ */
+- (void)setCalculateSizeType:(BOOL)calculateSizeType;
 
 /**
  *  刷新cell的局部信息
@@ -58,7 +65,8 @@ typedef void (^ CellSizeBlock)(CGSize size);
  */
 + (CGSize)getCellSizeWith:(id<AHDModelProtocol>)model cellWidth:(float)width;
 
+/*
 ///此方法先不管，后续优化可能用到
 - (void)setCellSize:(CGSize)size getActualSize:(CellSizeBlock)sizeBlock;
-
+*/
 @end

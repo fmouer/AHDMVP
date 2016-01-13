@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "AHDModelProtocol.h"
+#import "AHDCollectionTypes.h"
 
 typedef void (^ ActionCompletion)(NSDictionary * result);
 
@@ -19,8 +20,11 @@ typedef void (^ ActionCompletion)(NSDictionary * result);
 
 @property (nonatomic, weak)id<AHDModelProtocol>model;
 
+@property (nonatomic, assign)TranserType transerType;
+
 + (id)dataActionWithModel:(id<AHDModelProtocol>)model;
 
 - (void)performOperationWithActionType:(ActionCompletion) actionCompletion;
+
 
 @end

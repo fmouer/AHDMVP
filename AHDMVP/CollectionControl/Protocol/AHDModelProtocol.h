@@ -35,8 +35,6 @@
 @optional
 
 
-- (NSString *)updateFilterProperty;
-
-- (id )filterValue;
+- (NSString *)updateFilterKeyPath;
 
 @end

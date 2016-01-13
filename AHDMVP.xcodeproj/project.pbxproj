@@ -238,8 +238,8 @@
 		35D972A91C3D78E000AFA03C /* CollectionControl */ = {
 			isa = PBXGroup;
 			children = (
-				75CC55D01C466A250047152B /* extra */,
 				35D972AF1C3D78E000AFA03C /* Control */,
+				75CC55D01C466A250047152B /* extra */,
 				35D972AA1C3D78E000AFA03C /* Category */,
 				35D972B41C3D78E000AFA03C /* DataAction */,
 				35D972B91C3D78E000AFA03C /* Model */,
